@@ -1,22 +1,22 @@
-<canvas id="oilChart" width="600" height="400"></canvas>
+<canvas id="absen" width="300"></canvas>
 
 <script type="text/javascript">
-var oilCanvas = document.getElementById("oilChart");
+var absCanvas = document.getElementById("absen");
 
-Chart.defaults.global.defaultFontFamily = "Lato";
-Chart.defaults.global.defaultFontSize = 18;
+Chart.defaults.global.defaultFontFamily = "Arial";
+Chart.defaults.global.defaultFontSize = 16;
 
-var oilData = {
+var absen = {
     labels: [
-        "Saudi Arabia",
-        "Russia",
-        "Iraq",
-        "United Arab Emirates",
-        "Canada"
+        "Hadir",
+        "Izin",
+        "Sakit",
+        "Tugas",
+        "Tidak Hadir"
     ],
     datasets: [
         {
-            data: [133.3, 86.2, 52.2, 51.2, 50.2],
+            data: [20, 3, 2, 1, 4],
             backgroundColor: [
                 "#FF6384",
                 "#63FF84",
@@ -27,8 +27,8 @@ var oilData = {
         }]
 };
 
-var pieChart = new Chart(oilCanvas, {
+var pieChart = new Chart(absCanvas, {
   type: 'pie',
-  data: oilData
+  data: absen
 });
 </script>
