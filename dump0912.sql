@@ -1,139 +1,239 @@
-/*
- Navicat Premium Data Transfer
+-- phpMyAdmin SQL Dump
+-- version 4.9.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Waktu pembuatan: 09 Des 2019 pada 10.06
+-- Versi server: 10.4.10-MariaDB
+-- Versi PHP: 7.3.12
 
- Source Server         : local
- Source Server Type    : MySQL
- Source Server Version : 100138
- Source Host           : localhost:3306
- Source Schema         : mangab
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
 
- Target Server Type    : MySQL
- Target Server Version : 100138
- File Encoding         : 65001
 
- Date: 09/12/2019 02:53:40
-*/
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+--
+-- Database: `mangab`
+--
 
--- ----------------------------
--- Table structure for absen
--- ----------------------------
-DROP TABLE IF EXISTS `absen`;
-CREATE TABLE `absen`  (
-  `ID_ABSEN` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_MATKUL` int(11) NULL DEFAULT NULL,
-  `RUANGAN_ABSEN` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `DATE_ABSEN` date NULL DEFAULT NULL,
-  `TIME_ABSEN` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `TS_ABSEN` datetime(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`ID_ABSEN`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Table structure for ambilmk
--- ----------------------------
-DROP TABLE IF EXISTS `ambilmk`;
-CREATE TABLE `ambilmk`  (
-  `ID_AMBILMK` int(11) NOT NULL AUTO_INCREMENT,
+--
+-- Struktur dari tabel `absen`
+--
+
+CREATE TABLE `absen` (
+  `ID_ABSEN` int(11) NOT NULL,
+  `ID_MATKUL` int(11) DEFAULT NULL,
+  `TOPIK` varchar(30) NOT NULL,
+  `RUANGAN_ABSEN` varchar(5) DEFAULT NULL,
+  `DATE_ABSEN` date DEFAULT NULL,
+  `TIME_ABSEN` varchar(10) DEFAULT NULL,
+  `TS_ABSEN` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `ambilmk`
+--
+
+CREATE TABLE `ambilmk` (
+  `ID_AMBILMK` int(11) NOT NULL,
   `NRP_MHS` int(11) NOT NULL,
-  `ID_MATKUL` int(11) NOT NULL,
-  PRIMARY KEY (`ID_AMBILMK`) USING BTREE,
-  INDEX `FK_RELATIONSHIP_3`(`NRP_MHS`) USING BTREE,
-  CONSTRAINT `FK_RELATIONSHIP_3` FOREIGN KEY (`NRP_MHS`) REFERENCES `mahasiswa` (`NRP_MHS`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+  `ID_MATKUL` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Records of ambilmk
--- ----------------------------
-INSERT INTO `ambilmk` VALUES (1, 171111079, 1);
-INSERT INTO `ambilmk` VALUES (2, 171111079, 2);
-INSERT INTO `ambilmk` VALUES (3, 171111079, 4);
-INSERT INTO `ambilmk` VALUES (4, 171111109, 1);
-INSERT INTO `ambilmk` VALUES (5, 171111109, 3);
-INSERT INTO `ambilmk` VALUES (6, 171111109, 4);
-INSERT INTO `ambilmk` VALUES (7, 191116027, 1);
-INSERT INTO `ambilmk` VALUES (8, 191116027, 4);
-INSERT INTO `ambilmk` VALUES (9, 191116027, 5);
+--
+-- Dumping data untuk tabel `ambilmk`
+--
 
--- ----------------------------
--- Table structure for detail_absen
--- ----------------------------
-DROP TABLE IF EXISTS `detail_absen`;
-CREATE TABLE `detail_absen`  (
-  `ID_DETABSEN` int(11) NOT NULL AUTO_INCREMENT,
+INSERT INTO `ambilmk` (`ID_AMBILMK`, `NRP_MHS`, `ID_MATKUL`) VALUES
+(1, 171111079, 1),
+(2, 171111079, 2),
+(3, 171111079, 4),
+(4, 171111109, 1),
+(5, 171111109, 3),
+(6, 171111109, 4),
+(7, 191116027, 1),
+(8, 191116027, 4),
+(9, 191116027, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `detail_absen`
+--
+
+CREATE TABLE `detail_absen` (
+  `ID_DETABSEN` int(11) NOT NULL,
   `ID_ABSEN` int(11) NOT NULL,
   `NRP_MHS` int(11) NOT NULL,
-  `STATUS_DETABSEN` varchar(1) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `TS_DETABSEN` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
-  PRIMARY KEY (`ID_DETABSEN`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+  `STATUS_DETABSEN` varchar(1) DEFAULT NULL,
+  `TS_DETABSEN` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Table structure for dosen
--- ----------------------------
-DROP TABLE IF EXISTS `dosen`;
-CREATE TABLE `dosen`  (
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `dosen`
+--
+
+CREATE TABLE `dosen` (
   `NIP_DOSEN` int(11) NOT NULL,
-  `PASS_DOSEN` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `NAMA_DOSEN` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `EMAIL_DOSEN` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `STATUS_LOGIN` int(11) NULL DEFAULT NULL,
-  `STATUS_PASS` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`NIP_DOSEN`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+  `PASS_DOSEN` varchar(25) DEFAULT NULL,
+  `NAMA_DOSEN` varchar(50) DEFAULT NULL,
+  `EMAIL_DOSEN` varchar(25) DEFAULT NULL,
+  `STATUS_LOGIN` int(11) DEFAULT NULL,
+  `STATUS_PASS` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Records of dosen
--- ----------------------------
-INSERT INTO `dosen` VALUES (10134, 'stikimalang', 'Chaulina Alfianti Oktavia, S.Kom, M.T', 'chaulina@stiki.ac.id', 0, 0);
-INSERT INTO `dosen` VALUES (10163, 'stikimalang', 'Bagus Kristomoyo Kristanto, S.Kom., M.MT', 'bagus.kristanto@stiki.ac.', 0, 0);
-INSERT INTO `dosen` VALUES (40016, 'stikimalang', 'Rakhmad Maulidi, S.Kom., M.Kom', 'maulidi@stiki.ac.id', 0, 0);
+--
+-- Dumping data untuk tabel `dosen`
+--
 
--- ----------------------------
--- Table structure for mahasiswa
--- ----------------------------
-DROP TABLE IF EXISTS `mahasiswa`;
-CREATE TABLE `mahasiswa`  (
+INSERT INTO `dosen` (`NIP_DOSEN`, `PASS_DOSEN`, `NAMA_DOSEN`, `EMAIL_DOSEN`, `STATUS_LOGIN`, `STATUS_PASS`) VALUES
+(10134, 'stikimalang', 'Chaulina Alfianti Oktavia, S.Kom, M.T', 'chaulina@stiki.ac.id', 0, 0),
+(10163, 'stikimalang', 'Bagus Kristomoyo Kristanto, S.Kom., M.MT', 'bagus.kristanto@stiki.ac.', 0, 0),
+(40016, 'stikimalang', 'Rakhmad Maulidi, S.Kom., M.Kom', 'maulidi@stiki.ac.id', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `mahasiswa`
+--
+
+CREATE TABLE `mahasiswa` (
   `NRP_MHS` int(11) NOT NULL,
-  `PASS_MHS` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `NAMA_MHS` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `EMAIL_MHS` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `ID_DEVICE` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `STATUS_LOGIN` int(11) NULL DEFAULT NULL,
-  `STATUS_PASS` int(11) NULL DEFAULT NULL,
-  `LAST_LOGOUT` datetime(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`NRP_MHS`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+  `PASS_MHS` varchar(25) DEFAULT NULL,
+  `NAMA_MHS` varchar(50) DEFAULT NULL,
+  `EMAIL_MHS` varchar(25) DEFAULT NULL,
+  `ID_DEVICE` varchar(25) DEFAULT NULL,
+  `STATUS_LOGIN` int(11) DEFAULT NULL,
+  `STATUS_PASS` int(11) DEFAULT NULL,
+  `LAST_LOGOUT` bigint(15) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Records of mahasiswa
--- ----------------------------
-INSERT INTO `mahasiswa` VALUES (171111079, 'stikimalang', 'Muhammad Reyhan Firnas Adani', '171111079@mhs.stiki.ac.id', NULL, 0, 0, NULL);
-INSERT INTO `mahasiswa` VALUES (171111109, 'stikimalang', 'Nanda Bima Mahendra', '171111109@mhs.stiki.ac.id', NULL, 0, 0, NULL);
-INSERT INTO `mahasiswa` VALUES (191116027, 'stikimalang', 'M Irfan Alfiansyah', '191116027@mhs.stiki.ac.id', NULL, 0, 0, NULL);
+--
+-- Dumping data untuk tabel `mahasiswa`
+--
 
--- ----------------------------
--- Table structure for matkul
--- ----------------------------
-DROP TABLE IF EXISTS `matkul`;
-CREATE TABLE `matkul`  (
-  `ID_MATKUL` int(11) NOT NULL AUTO_INCREMENT,
-  `NIP_DOSEN` int(11) NULL DEFAULT NULL,
-  `KODE_MATKUL` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `NAMA_MATKUL` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `KELAS_MATKUL` varchar(2) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`ID_MATKUL`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+INSERT INTO `mahasiswa` (`NRP_MHS`, `PASS_MHS`, `NAMA_MHS`, `EMAIL_MHS`, `ID_DEVICE`, `STATUS_LOGIN`, `STATUS_PASS`, `LAST_LOGOUT`) VALUES
+(171111079, 'stikimalang', 'Muhammad Reyhan Firnas Adani', '171111079@mhs.stiki.ac.id', NULL, 0, 0, 0),
+(171111109, 'stikimalang', 'Nanda Bima Mahendra', '171111109@mhs.stiki.ac.id', NULL, 0, 0, 0),
+(191116027, 'stikimalang', 'M Irfan Alfiansyah', '191116027@mhs.stiki.ac.id', NULL, 0, 0, 0);
 
--- ----------------------------
--- Records of matkul
--- ----------------------------
-INSERT INTO `matkul` VALUES (1, 10163, 'TI14KB65', 'KOMPUTASI AWAN', 'A');
-INSERT INTO `matkul` VALUES (2, 10134, '	TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'C');
-INSERT INTO `matkul` VALUES (3, 10134, 'TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'D');
-INSERT INTO `matkul` VALUES (4, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'A');
-INSERT INTO `matkul` VALUES (5, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'C');
+-- --------------------------------------------------------
 
-SET FOREIGN_KEY_CHECKS = 1;
+--
+-- Struktur dari tabel `matkul`
+--
+
+CREATE TABLE `matkul` (
+  `ID_MATKUL` int(11) NOT NULL,
+  `NIP_DOSEN` int(11) DEFAULT NULL,
+  `KODE_MATKUL` varchar(10) DEFAULT NULL,
+  `NAMA_MATKUL` varchar(50) DEFAULT NULL,
+  `KELAS_MATKUL` varchar(2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data untuk tabel `matkul`
+--
+
+INSERT INTO `matkul` (`ID_MATKUL`, `NIP_DOSEN`, `KODE_MATKUL`, `NAMA_MATKUL`, `KELAS_MATKUL`) VALUES
+(1, 10163, 'TI14KB65', 'KOMPUTASI AWAN', 'A'),
+(2, 10134, '	TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'C'),
+(3, 10134, 'TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'D'),
+(4, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'A'),
+(5, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'C');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indeks untuk tabel `absen`
+--
+ALTER TABLE `absen`
+  ADD PRIMARY KEY (`ID_ABSEN`) USING BTREE;
+
+--
+-- Indeks untuk tabel `ambilmk`
+--
+ALTER TABLE `ambilmk`
+  ADD PRIMARY KEY (`ID_AMBILMK`) USING BTREE,
+  ADD KEY `FK_RELATIONSHIP_3` (`NRP_MHS`) USING BTREE;
+
+--
+-- Indeks untuk tabel `detail_absen`
+--
+ALTER TABLE `detail_absen`
+  ADD PRIMARY KEY (`ID_DETABSEN`) USING BTREE;
+
+--
+-- Indeks untuk tabel `dosen`
+--
+ALTER TABLE `dosen`
+  ADD PRIMARY KEY (`NIP_DOSEN`) USING BTREE;
+
+--
+-- Indeks untuk tabel `mahasiswa`
+--
+ALTER TABLE `mahasiswa`
+  ADD PRIMARY KEY (`NRP_MHS`) USING BTREE;
+
+--
+-- Indeks untuk tabel `matkul`
+--
+ALTER TABLE `matkul`
+  ADD PRIMARY KEY (`ID_MATKUL`) USING BTREE;
+
+--
+-- AUTO_INCREMENT untuk tabel yang dibuang
+--
+
+--
+-- AUTO_INCREMENT untuk tabel `absen`
+--
+ALTER TABLE `absen`
+  MODIFY `ID_ABSEN` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `ambilmk`
+--
+ALTER TABLE `ambilmk`
+  MODIFY `ID_AMBILMK` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT untuk tabel `detail_absen`
+--
+ALTER TABLE `detail_absen`
+  MODIFY `ID_DETABSEN` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `matkul`
+--
+ALTER TABLE `matkul`
+  MODIFY `ID_MATKUL` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `ambilmk`
+--
+ALTER TABLE `ambilmk`
+  ADD CONSTRAINT `FK_RELATIONSHIP_3` FOREIGN KEY (`NRP_MHS`) REFERENCES `mahasiswa` (`NRP_MHS`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
