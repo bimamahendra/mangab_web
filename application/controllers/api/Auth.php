@@ -58,14 +58,24 @@ class Auth extends CI_Controller {
                 $this->throw(200, $response);
                 return;
             }
-            $response["error"] = false;
-            $response["message"] = "Login sukses";
-            $response["type"] = "dosen";
-            $response["no_induk"] = $data->NIP_DOSEN;
-            $response["nama"] = $data->NAMA_DOSEN;
-            $response["email"] = $data->EMAIL_DOSEN;
-            $this->throw(200, $response);
-            return;
+
+            $update = $this->db->query("UPDATE dosen SET STATUS_LOGIN = 1 WHERE NIP_DOSEN = ".$nrp." ");
+            if($this->db->affected_rows() > 0){
+                $response["error"] = false;
+                $response["message"] = "Login sukses";
+                $response["type"] = "dosen";
+                $response["no_induk"] = $data->NIP_DOSEN;
+                $response["nama"] = $data->NAMA_DOSEN;
+                $response["email"] = $data->EMAIL_DOSEN;
+                $response["status_password"] = $data->STATUS_PASS;
+                $this->throw(200, $response);
+                return;
+            }else {
+                $response["error"] = false;
+                $response["message"] = "Terjadi kesalahan";
+                $this->throw(200, $response);
+                return;
+            }
         }
 
         $data = $this->db->where("NRP_MHS", $nrp)->where("PASS_MHS", $password)->get("mahasiswa")->row();
@@ -87,15 +97,23 @@ class Auth extends CI_Controller {
                 return;
             }
 
-            $response["error"] = false;
-            $response["message"] = "Login sukses";
-            $response["type"] = "mahasiswa";
-            $response["no_induk"] = $data->NRP_MHS;
-            $response["nama"] = $data->NAMA_MHS;
-            $response["email"] = $data->EMAIL_MHS;
-            $response["status_password"] = $data->STATUS_PASS;
-            $this->throw(200, $response);
-            return;
+            $update = $this->db->query("UPDATE mahasiswa SET STATUS_LOGIN = 1 WHERE NRP_MHS = ".$nrp." ");
+            if($this->db->affected_rows() > 0){
+                $response["error"] = false;
+                $response["message"] = "Login sukses";
+                $response["type"] = "mahasiswa";
+                $response["no_induk"] = $data->NRP_MHS;
+                $response["nama"] = $data->NAMA_MHS;
+                $response["email"] = $data->EMAIL_MHS;
+                $response["status_password"] = $data->STATUS_PASS;
+                $this->throw(200, $response);
+                return;
+            }else {
+                $response["error"] = false;
+                $response["message"] = "Terjadi kesalahan";
+                $this->throw(200, $response);
+                return;
+            }
         }
 
         $response["error"] = true;
@@ -111,7 +129,7 @@ class Auth extends CI_Controller {
         if($data != null){
             $update = $this->db->query("UPDATE mahasiswa SET ID_DEVICE = NULL, 
             STATUS_LOGIN = 0, LAST_LOGOUT = ".round(microtime(true) * 1000)." WHERE NRP_MHS = ".$nrp." ");
-            if($update){
+            if($this->db->affected_rows() > 0){
                 $response["error"] = false;
                 $response["message"] = "Berhasil logout";
                 $this->throw(200, $response);
@@ -126,10 +144,19 @@ class Auth extends CI_Controller {
 
         $data = $this->db->where("NIP_DOSEN", $nrp)->get("dosen")->row();
         if($data != null){
-            $response["error"] = false;
-            $response["message"] = "Berhasil logout";
-            $this->throw(200, $response);
-            return;
+            $update = $this->db->query("UPDATE dosen SET STATUS_LOGIN = 0 WHERE NIP_DOSEN = ".$nrp." ");
+            
+            if($this->db->affected_rows() > 0){
+                $response["error"] = false;
+                $response["message"] = "Berhasil logout";
+                $this->throw(200, $response);
+                return;
+            }else {
+                $response["error"] = false;
+                $response["message"] = "Terjadi kesalahan";
+                $this->throw(200, $response);
+                return;
+            }
         }
 
         $response["error"] = true;
@@ -147,7 +174,24 @@ class Auth extends CI_Controller {
         if($data != null){
             $update = $this->db->query("UPDATE mahasiswa SET PASS_MHS='".$newPassword."', STATUS_PASS = 1
             WHERE NRP_MHS =".$noInduk."");
-            if($update){
+            if($this->db->affected_rows() > 0){
+                $response["error"] = false;
+                $response["message"] = "Berhasil ubah password";
+                $this->throw(200, $response);
+                return;
+            }else {
+                $response["error"] = false;
+                $response["message"] = "Terjadi kesalahan";
+                $this->throw(200, $response);
+                return;
+            }
+        }
+
+        $data = $this->db->where("NIP_DOSEN", $noInduk)->get("dosen")->row();
+        if($data != null){
+            $update = $this->db->query("UPDATE dosen SET PASS_DOSEN ='".$newPassword."', STATUS_PASS = 1
+            WHERE NIP_DOSEN =".$noInduk."");
+            if($this->db->affected_rows() > 0){
                 $response["error"] = false;
                 $response["message"] = "Berhasil ubah password";
                 $this->throw(200, $response);
