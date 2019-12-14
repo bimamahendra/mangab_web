@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 09 Des 2019 pada 10.06
+-- Waktu pembuatan: 14 Des 2019 pada 11.01
 -- Versi server: 10.4.10-MariaDB
 -- Versi PHP: 7.3.12
 
@@ -35,7 +35,8 @@ CREATE TABLE `absen` (
   `RUANGAN_ABSEN` varchar(5) DEFAULT NULL,
   `DATE_ABSEN` date DEFAULT NULL,
   `TIME_ABSEN` varchar(10) DEFAULT NULL,
-  `TS_ABSEN` datetime DEFAULT NULL
+  `TS_ABSEN` datetime DEFAULT NULL,
+  `STATUS_ABSEN` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -63,7 +64,10 @@ INSERT INTO `ambilmk` (`ID_AMBILMK`, `NRP_MHS`, `ID_MATKUL`) VALUES
 (6, 171111109, 4),
 (7, 191116027, 1),
 (8, 191116027, 4),
-(9, 191116027, 5);
+(9, 191116027, 5),
+(10, 191116027, 6),
+(11, 171111079, 6),
+(12, 171111109, 6);
 
 -- --------------------------------------------------------
 
@@ -99,7 +103,7 @@ CREATE TABLE `dosen` (
 --
 
 INSERT INTO `dosen` (`NIP_DOSEN`, `PASS_DOSEN`, `NAMA_DOSEN`, `EMAIL_DOSEN`, `STATUS_LOGIN`, `STATUS_PASS`) VALUES
-(10134, 'stikimalang', 'Chaulina Alfianti Oktavia, S.Kom, M.T', 'chaulina@stiki.ac.id', 0, 0),
+(10134, 'ubahpassword', 'Chaulina Alfianti Oktavia, S.Kom, M.T', 'chaulina@stiki.ac.id', 0, 0),
 (10163, 'stikimalang', 'Bagus Kristomoyo Kristanto, S.Kom., M.MT', 'bagus.kristanto@stiki.ac.', 0, 0),
 (40016, 'stikimalang', 'Rakhmad Maulidi, S.Kom., M.Kom', 'maulidi@stiki.ac.id', 0, 0);
 
@@ -149,10 +153,11 @@ CREATE TABLE `matkul` (
 
 INSERT INTO `matkul` (`ID_MATKUL`, `NIP_DOSEN`, `KODE_MATKUL`, `NAMA_MATKUL`, `KELAS_MATKUL`) VALUES
 (1, 10163, 'TI14KB65', 'KOMPUTASI AWAN', 'A'),
-(2, 10134, '	TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'C'),
+(2, 10134, 'TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'C'),
 (3, 10134, 'TI14KB51', 'PEMROGRAMAN PERANGKAT BERGERAK', 'D'),
 (4, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'A'),
-(5, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'C');
+(5, 40016, 'TI14KB53', 'PEMROGRAMAN WEB LANJUT', 'C'),
+(6, 10134, 'TI14KB52', 'MATEMATIKA DISKIRT', 'C');
 
 --
 -- Indexes for dumped tables
@@ -209,7 +214,7 @@ ALTER TABLE `absen`
 -- AUTO_INCREMENT untuk tabel `ambilmk`
 --
 ALTER TABLE `ambilmk`
-  MODIFY `ID_AMBILMK` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `ID_AMBILMK` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_absen`
@@ -221,7 +226,7 @@ ALTER TABLE `detail_absen`
 -- AUTO_INCREMENT untuk tabel `matkul`
 --
 ALTER TABLE `matkul`
-  MODIFY `ID_MATKUL` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID_MATKUL` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

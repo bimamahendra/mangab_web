@@ -64,7 +64,8 @@ class Matkul extends CI_Controller {
             "RUANGAN_ABSEN" => $ruangan,
             "DATE_ABSEN" => date("Y-m-d"),
             "TIME_ABSEN" => date("H:i"),
-            "TS_ABSEN" => date("Y-m-d H:i:s")
+            "TS_ABSEN" => date("Y-m-d H:i:s"),
+            "STATUS_ABSEN" => 0
         );
 
         $this->db->insert("absen", $data);
@@ -80,6 +81,7 @@ class Matkul extends CI_Controller {
                 JOIN mahasiswa b
                 ON b.NRP_MHS = a.NRP_MHS 
                 WHERE a.ID_MATKUL = '".$idMatkul."' ")->result_array();
+
             foreach($mhs as $row){
                 $dataDetailAbsen["ID_ABSEN"] = $id;
                 $dataDetailAbsen["NRP_MHS"] = $row["nrp"];
@@ -87,6 +89,13 @@ class Matkul extends CI_Controller {
                 $dataDetailAbsen["TS_DETABSEN"] = null;
 
                 $detailAbsenMhs[] = $dataDetailAbsen;
+            }
+
+            if(count($detailAbsenMhs) == 0){
+                $response["error"] = true;
+                $response["message"] = "Tidak ada mahasiswa yang terdaftar di matkul ini";
+                $this->throw(200, $response);
+                return;
             }
 
             $this->db->insert_batch("detail_absen", $detailAbsenMhs);

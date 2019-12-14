@@ -20,13 +20,13 @@ class Absen extends CI_Controller {
         $idAbsen = explode("||", $this->encryption->decrypt($qrCode))[0];
         $idMatkul = explode("||", $this->encryption->decrypt($qrCode))[1];
 
-        $isNotExists = $this->db
+        $data = $this->db
         ->where("NRP_MHS", $nrp)
         ->where("ID_ABSEN", $idAbsen)
         ->get("detail_absen")
-        ->row() == null;
+        ->row();
 
-        if($isNotExists){
+        if($data == null){
             $response["error"] = true;
             $response["message"] = "Mahasiswa tidak terdaftar pada mata kuliah";
             
@@ -34,14 +34,28 @@ class Absen extends CI_Controller {
             return;
         }
 
-        $isNotExists = $this->db
+        $data = $this->db
         ->where("ID_ABSEN", $idAbsen)
         ->get("detail_absen")
-        ->row() == null;
+        ->row();
 
-        if($isNotExists){
+        if($data == null){
             $response["error"] = true;
             $response["message"] = "Absensi tidak ditemukan";
+            
+            $this->throw(200, $response);
+            return;
+        }
+
+        $data = $this->db
+        ->where("ID_ABSEN", $idAbsen)
+        ->where("NRP_MHS", $nrp)
+        ->get("detail_absen")
+        ->row();
+
+        if($data->STATUS_DETABSEN == 1){
+            $response["error"] = true;
+            $response["message"] = "Sudah melakukan absensi";
             
             $this->throw(200, $response);
             return;
@@ -102,16 +116,17 @@ class Absen extends CI_Controller {
 
         $isDosen = $this->db->where("NIP_DOSEN", $noInduk)->get("matkul")->row() != null;
         if($isDosen){
-            $data = $this->db->query("SELECT a.KODE_MATKUL as kode_matkul,
-            a.NAMA_MATKUL as nama_matkul,
-            a.KELAS_MATKUL as kelas_matkul,
-            b.TOPIK as topik_matkul,
-            b.RUANGAN_ABSEN as ruangan_matkul,
-            b.TS_ABSEN as jadwal_kelas
-            FROM matkul a
-            JOIN absen b
-            ON a.ID_MATKUL = b.ID_MATKUL
-            WHERE a.NIP_DOSEN = '".$noInduk."'
+            $data = $this->db->query("SELECT b.KODE_MATKUL as kode_matkul,
+            b.NAMA_MATKUL as nama_matkul,
+            b.KELAS_MATKUL as kelas_matkul,
+            a.TOPIK as topik_matkul,
+            a.RUANGAN_ABSEN as ruangan_matkul,
+            a.TS_ABSEN as jadwal_kelas
+            FROM absen a
+            JOIN matkul b
+            ON b.ID_MATKUL = a.ID_MATKUL
+            WHERE b.NIP_DOSEN = '".$noInduk."'
+            AND a.STATUS_ABSEN = 1
             ")->result();
 
             if(count($data) > 0){    
@@ -124,7 +139,7 @@ class Absen extends CI_Controller {
             }
 
             $response["error"] = true;
-            $response["message"] = "Riwayat absen ditemukan";
+            $response["message"] = "Riwayat absen tidak ditemukan";
 
             $this->throw(200, $response);
             return;
@@ -144,9 +159,10 @@ class Absen extends CI_Controller {
             FROM detail_absen a 
             JOIN absen b
             JOIN matkul c
-            ON a.ID_ABSEn = b.ID_ABSEN
+            ON a.ID_ABSEN = b.ID_ABSEN
             AND b.ID_MATKUL = c.ID_MATKUL
             WHERE a.NRP_MHS = '".$noInduk."'
+            AND b.STATUS_ABSEN = 1
             ")->result();
 
             if(count($data) > 0){    
@@ -159,7 +175,7 @@ class Absen extends CI_Controller {
             }
 
             $response["error"] = true;
-            $response["message"] = "Riwayat absen ditemukan";
+            $response["message"] = "Riwayat absen tidak ditemukan";
 
             $this->throw(200, $response);
 
@@ -169,6 +185,49 @@ class Absen extends CI_Controller {
         $response["error"] = true;
         $response["message"] = "Riwayat absen tidak ditemukan";
         $this->throw(200, $response);
+    }
+
+    public function rekap(){
+        $response = [];
+
+        $qrCode = $this->input->post("qr_code");
+        $decrypted = $this->encryption->decrypt($qrCode);
+
+        if($decrypted != false){
+            $idAbsen = explode("||", $decrypted)[0];
+            $data = $this->db->where("ID_ABSEN", $idAbsen)->get("absen")->row();
+
+            if($data != null){
+                if($data->STATUS_ABSEN = 1){
+                    $response["error"] = true;
+                    $response["message"] = "Absen sudah direkap";
+                    $this->throw(200, $response);
+                    return;
+                }
+
+                $this->db->query("UPDATE absen SET STATUS_ABSEN = 1 WHERE ID_ABSEN=".$idAbsen);
+                if($this->db->affected_rows() > 0){
+                    $response["error"] = false;
+                    $response["message"] = "Berhasil rekap absen";
+                    $this->throw(200, $response);
+                    return;
+                }
+
+                $response["error"] = true;
+                $response["message"] = "Terjadi kesalahan";
+                $this->throw(200, $response);
+                return;
+            }
+
+            $response["error"] = true;
+            $response["message"] = "Absen tidak ditemukan";
+            $this->throw(200, $response);
+            return;
+        }
+
+        $response["error"] = true;
+        $response["message"] = "Format QR Code tidak valid";
+         $this->throw(200, $response);
     }
 
     private function throw($statusCode, $response){
