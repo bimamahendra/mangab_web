@@ -52,7 +52,7 @@
                 <tr>
                   <td class="text-center"><?php echo $dosen->NIP_DOSEN; ?></td>
                   <td class="text-left"><?php echo $dosen->NAMA_DOSEN ?></td>
-                  <td class="text-center"><?php echo $dosen->EMAIL_DOSEN; ?></td>
+                  <td class="text-left"><?php echo $dosen->EMAIL_DOSEN; ?></td>
                   <td class="text-center"><?php echo isset ($dosen->STATUS_LOGIN) ? $dosen->STATUS_LOGIN : "0" ?></td>
                   <td class="text-center"><?php echo isset ($dosen->STATUS_PASS) ? $dosen->STATUS_PASS : "0" ?></td>
                   <td class="text-center">
