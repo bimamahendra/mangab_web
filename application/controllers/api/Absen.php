@@ -28,7 +28,7 @@ class Absen extends CI_Controller {
 
         if($data == null){
             $response["error"] = true;
-            $response["message"] = "Mahasiswa tidak terdaftar pada mata kuliah";
+            $response["message"] = "Student is not recognize in subject";
             
             $this->throw(200, $response);
             return;
@@ -41,7 +41,7 @@ class Absen extends CI_Controller {
 
         if($data == null){
             $response["error"] = true;
-            $response["message"] = "Absensi tidak ditemukan";
+            $response["message"] = "Attendance is not found";
             
             $this->throw(200, $response);
             return;
@@ -55,7 +55,7 @@ class Absen extends CI_Controller {
 
         if($data->STATUS_DETABSEN == 1){
             $response["error"] = true;
-            $response["message"] = "Sudah melakukan absensi";
+            $response["message"] = "Attended";
             
             $this->throw(200, $response);
             return;
@@ -70,13 +70,13 @@ class Absen extends CI_Controller {
 
         if($this->db->affected_rows() > 0){
             $response["error"] = false;
-            $response["message"] = "Absensi berhasil";
+            $response["message"] = "Attended";
             $this->throw(200, $response);
             return;
         }
 
         $response["error"] = true;
-        $response["message"] = "Terjadi kesalahan";
+        $response["message"] = "Error found";
 
         $this->throw(200, $response);
     }
@@ -97,7 +97,7 @@ class Absen extends CI_Controller {
 
         if(count($data) > 0){
             $response["error"] = false;
-            $response["message"] = "Detail absen ditemukan";
+            $response["message"] = "Attendance detail found";
             $response["data"] = $data;
             
             $this->throw(200, $response);
@@ -105,7 +105,7 @@ class Absen extends CI_Controller {
         }
 
         $response["error"] = true;
-        $response["message"] = "Detail absen tidak ditemukan";
+        $response["message"] = "Attendance detail is not found";
         $this->throw(200, $response);
     }
 
@@ -131,7 +131,7 @@ class Absen extends CI_Controller {
 
             if(count($data) > 0){    
                 $response["error"] = false;
-                $response["message"] = "Riwayat ditemukan";
+                $response["message"] = "History found";
                 $response["data"] = $data;
 
                 $this->throw(200, $response);
@@ -139,7 +139,7 @@ class Absen extends CI_Controller {
             }
 
             $response["error"] = true;
-            $response["message"] = "Riwayat absen tidak ditemukan";
+            $response["message"] = "History is not found";
 
             $this->throw(200, $response);
             return;
@@ -167,7 +167,7 @@ class Absen extends CI_Controller {
 
             if(count($data) > 0){    
                 $response["error"] = false;
-                $response["message"] = "Riwayat ditemukan";
+                $response["message"] = "History found";
                 $response["data"] = $data;
 
                 $this->throw(200, $response);
@@ -175,7 +175,7 @@ class Absen extends CI_Controller {
             }
 
             $response["error"] = true;
-            $response["message"] = "Riwayat absen tidak ditemukan";
+            $response["message"] = "History is not found";
 
             $this->throw(200, $response);
 
@@ -183,7 +183,7 @@ class Absen extends CI_Controller {
         }
 
         $response["error"] = true;
-        $response["message"] = "Riwayat absen tidak ditemukan";
+        $response["message"] = "History is not found";
         $this->throw(200, $response);
     }
 
@@ -198,9 +198,9 @@ class Absen extends CI_Controller {
             $data = $this->db->where("ID_ABSEN", $idAbsen)->get("absen")->row();
 
             if($data != null){
-                if($data->STATUS_ABSEN = 1){
+                if($data->STATUS_ABSEN == 1){
                     $response["error"] = true;
-                    $response["message"] = "Absen sudah direkap";
+                    $response["message"] = "Attendance has been send";
                     $this->throw(200, $response);
                     return;
                 }
@@ -208,25 +208,25 @@ class Absen extends CI_Controller {
                 $this->db->query("UPDATE absen SET STATUS_ABSEN = 1 WHERE ID_ABSEN=".$idAbsen);
                 if($this->db->affected_rows() > 0){
                     $response["error"] = false;
-                    $response["message"] = "Berhasil rekap absen";
+                    $response["message"] = "Send Attendance successfully";
                     $this->throw(200, $response);
                     return;
                 }
 
                 $response["error"] = true;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
 
             $response["error"] = true;
-            $response["message"] = "Absen tidak ditemukan";
+            $response["message"] = "Attendance is not found";
             $this->throw(200, $response);
             return;
         }
 
         $response["error"] = true;
-        $response["message"] = "Format QR Code tidak valid";
+        $response["message"] = "QR Code format is not valid";
          $this->throw(200, $response);
     }
 

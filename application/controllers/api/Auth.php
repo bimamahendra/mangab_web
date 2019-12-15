@@ -17,18 +17,19 @@ class Auth extends CI_Controller {
         if($data != null){
             if($data->STATUS_LOGIN == 1){ 
                 $response["error"] = false;
-                $response["message"] = "Selamat datang kembali";
+                $response["message"] = "Welcome back";
                 $response["type"] = "mahasiswa";
                 $response["no_induk"] = $data->NRP_MHS;
                 $response["nama"] = $data->NAMA_MHS;
                 $response["email"] = $data->EMAIL_MHS;
+                $response["status_password"] = $data->STATUS_PASS;
                 $this->throw(200, $response);
                 return;
             }
         }
 
         $response["error"] = true;
-        $response["message"] = "Silahkan login terlebih dahulu";
+        $response["message"] = "Please do login";
         $this->throw(200, $response);
     }
 
@@ -38,13 +39,14 @@ class Auth extends CI_Controller {
 
         $nrp = $this->input->post("no_induk");
         $password = $this->input->post("password");
+        $device_id = $this->input->post("device_id");
 
         $isDosenExists = $this->db->where("NIP_DOSEN", $nrp)->get("dosen")->row() != null;
         $isMhsExists = $this->db->where("NRP_MHS", $nrp)->get("mahasiswa")->row() != null;
 
         if(!$isDosenExists && !$isMhsExists){
             $response["error"] = true;
-            $response["message"] = "Akun tidak terdaftar";
+            $response["message"] = "Account is not registered";
             $this->throw(200, $response);
             return;
         }
@@ -54,7 +56,7 @@ class Auth extends CI_Controller {
         if($data != null){
             if($data->STATUS_LOGIN == 1){
                 $response["error"] = true;
-                $response["message"] = "Akun sedang login di perangkat lain";
+                $response["message"] = "Account has logged in other device";
                 $this->throw(200, $response);
                 return;
             }
@@ -62,7 +64,7 @@ class Auth extends CI_Controller {
             $update = $this->db->query("UPDATE dosen SET STATUS_LOGIN = 1 WHERE NIP_DOSEN = ".$nrp." ");
             if($this->db->affected_rows() > 0){
                 $response["error"] = false;
-                $response["message"] = "Login sukses";
+                $response["message"] = "Login successful";
                 $response["type"] = "dosen";
                 $response["no_induk"] = $data->NIP_DOSEN;
                 $response["nama"] = $data->NAMA_DOSEN;
@@ -72,7 +74,7 @@ class Auth extends CI_Controller {
                 return;
             }else {
                 $response["error"] = false;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
@@ -82,7 +84,7 @@ class Auth extends CI_Controller {
         if($data != null){
             if($data->STATUS_LOGIN == 1){
                 $response["error"] = true;
-                $response["message"] = "Akun sedang login di perangkat lain";
+                $response["message"] = "Account has logged in other device";
                 $this->throw(200, $response);
                 return;
             }
@@ -92,12 +94,12 @@ class Auth extends CI_Controller {
 
             if($isUnderLogoutPenalty){
                 $response["error"] = true;
-                $response["message"] = "Anda sedang dalam masa hukuman logout, makanya jangan logout bambank";
+                $response["message"] = "Account is under penalty, please login after 15 minutes";
                 $this->throw(200, $response);
                 return;
             }
 
-            $update = $this->db->query("UPDATE mahasiswa SET STATUS_LOGIN = 1 WHERE NRP_MHS = ".$nrp." ");
+            $update = $this->db->query("UPDATE mahasiswa SET STATUS_LOGIN = 1, ID_DEVICE = ".$device_id." WHERE NRP_MHS = ".$nrp." ");
             if($this->db->affected_rows() > 0){
                 $response["error"] = false;
                 $response["message"] = "Login sukses";
@@ -110,14 +112,14 @@ class Auth extends CI_Controller {
                 return;
             }else {
                 $response["error"] = false;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
         }
 
         $response["error"] = true;
-        $response["message"] = "Password salah";
+        $response["message"] = "Password is incorrect";
         $this->throw(200, $response);
     }
 
@@ -131,12 +133,12 @@ class Auth extends CI_Controller {
             STATUS_LOGIN = 0, LAST_LOGOUT = ".round(microtime(true) * 1000)." WHERE NRP_MHS = ".$nrp." ");
             if($this->db->affected_rows() > 0){
                 $response["error"] = false;
-                $response["message"] = "Berhasil logout";
+                $response["message"] = "Logout successfully";
                 $this->throw(200, $response);
                 return;
             }else {
                 $response["error"] = false;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
@@ -148,19 +150,19 @@ class Auth extends CI_Controller {
             
             if($this->db->affected_rows() > 0){
                 $response["error"] = false;
-                $response["message"] = "Berhasil logout";
+                $response["message"] = "Logout successfully";
                 $this->throw(200, $response);
                 return;
             }else {
                 $response["error"] = false;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
         }
 
         $response["error"] = true;
-        $response["message"] = "Akun tidak terdaftar";
+        $response["message"] = "Account is not registered";
         $this->throw(200, $response);
     }
 
@@ -176,12 +178,12 @@ class Auth extends CI_Controller {
             WHERE NRP_MHS =".$noInduk."");
             if($this->db->affected_rows() > 0){
                 $response["error"] = false;
-                $response["message"] = "Berhasil ubah password";
+                $response["message"] = "Password has changed";
                 $this->throw(200, $response);
                 return;
             }else {
                 $response["error"] = false;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
@@ -193,19 +195,19 @@ class Auth extends CI_Controller {
             WHERE NIP_DOSEN =".$noInduk."");
             if($this->db->affected_rows() > 0){
                 $response["error"] = false;
-                $response["message"] = "Berhasil ubah password";
+                $response["message"] = "Password has changed";
                 $this->throw(200, $response);
                 return;
             }else {
                 $response["error"] = false;
-                $response["message"] = "Terjadi kesalahan";
+                $response["message"] = "Error found";
                 $this->throw(200, $response);
                 return;
             }
         }
 
         $response["error"] = true;
-        $response["message"] = "Akun tidak terdaftar";
+        $response["message"] = "Account is not registered";
         $this->throw(200, $response);
     }
 

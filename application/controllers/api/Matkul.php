@@ -20,14 +20,14 @@ class Matkul extends CI_Controller {
 
         if(count($data) > 0){
             $response["error"] = false;
-            $response["message"] = "Matkul ditemukan";
+            $response["message"] = "Subject found";
             $response["data"] = $data;
             $this->throw(200, $response);
             return;
         }
 
         $response["error"] = true;
-        $response["message"] = "Anda tidak mengajar di mata kuliah manapun";
+        $response["message"] = "You are not in any subject";
         $this->throw(200, $response);
     }
 
@@ -39,7 +39,7 @@ class Matkul extends CI_Controller {
         $data = $this->db->query("SELECT ID_MATKUL as id_matkul, KELAS_MATKUL as kelas FROM matkul WHERE KODE_MATKUL='".$kode."'")->result();
         if(count($data) > 0){
             $response["error"] = false;
-            $response["message"] = "Kelas ditemukan";
+            $response["message"] = "Subject found";
             $response["data"] = $data;
 
             $this->throw(200, $response);
@@ -47,7 +47,7 @@ class Matkul extends CI_Controller {
         }
 
         $response["error"] = true;
-        $response["message"] = "Mata kuliah ini tidak terdaftar di kelas manapun";
+        $response["message"] = "Subject is not registered";
         $this->throw(200, $response);
     }
 
@@ -93,7 +93,7 @@ class Matkul extends CI_Controller {
 
             if(count($detailAbsenMhs) == 0){
                 $response["error"] = true;
-                $response["message"] = "Tidak ada mahasiswa yang terdaftar di matkul ini";
+                $response["message"] = "No student in this subject";
                 $this->throw(200, $response);
                 return;
             }
@@ -110,7 +110,7 @@ class Matkul extends CI_Controller {
                     WHERE a.ID_ABSEN = '".$id."' ")->result();
 
                 $response["error"] = false;
-                $response["message"] = "Berhasil generate QR Code";
+                $response["message"] = "QR Code generated";
                 $response["id_absen"] = $id;
                 $response["qr_code"] = $this->encryption->encrypt($insertedData->ID_ABSEN."||".$idMatkul);
                 $response["data_mhs"] = $mhs;
@@ -121,7 +121,7 @@ class Matkul extends CI_Controller {
         }
         
         $response["error"] = true;
-        $response["message"] = "Gagal generate QR Code";
+        $response["message"] = "QR Code failed";
 
         $this->throw(200, $response);
     }
