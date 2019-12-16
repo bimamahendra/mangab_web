@@ -191,6 +191,7 @@ class Absen extends CI_Controller {
         $response = [];
 
         $qrCode = $this->input->post("qr_code");
+        $note = $this->input->post("note");
         $decrypted = $this->encryption->decrypt($qrCode);
 
         if($decrypted != false){
@@ -200,12 +201,12 @@ class Absen extends CI_Controller {
             if($data != null){
                 if($data->STATUS_ABSEN == 1){
                     $response["error"] = true;
-                    $response["message"] = "Attendance has been send";
+                    $response["message"] = "Attendance has been sent";
                     $this->throw(200, $response);
                     return;
                 }
 
-                $this->db->query("UPDATE absen SET STATUS_ABSEN = 1 WHERE ID_ABSEN=".$idAbsen);
+                $this->db->query("UPDATE absen SET STATUS_ABSEN = 1, NOTE = '".$note."' WHERE ID_ABSEN=".$idAbsen);
                 if($this->db->affected_rows() > 0){
                     $response["error"] = false;
                     $response["message"] = "Send Attendance successfully";
