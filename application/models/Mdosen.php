@@ -1,11 +1,11 @@
 <?php
 class Mdosen extends CI_Model {
-	public function __construct() {
-		parent::__construct();
-		$this->load->database();
-	}
+  public function __construct() {
+    parent::__construct();
+    $this->load->database();
+  }
 
-	public function getAllDosen(){
+  public function getAllDosen(){
     return $this->db->get('dosen')->result();
   }
 
@@ -24,8 +24,8 @@ class Mdosen extends CI_Model {
   }
 
   public function reset($nip){
-  	$this->db->query("UPDATE dosen SET STATUS_LOGIN = 0, STATUS_PASS = 0 WHERE NIP_DOSEN = ".$nip." ");
-  	return $this->db->affected_rows();
+    $this->db->query("UPDATE dosen SET PASS_DOSEN = 'stikimalang', STATUS_PASS = 0 WHERE NIP_DOSEN = ".$nip." ");
+    return $this->db->affected_rows();
   }
 
   public function delete($nip){

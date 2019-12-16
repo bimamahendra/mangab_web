@@ -1,5 +1,12 @@
 <canvas id="absen" width="300"></canvas>
 
+<?php foreach ($dataout as $data){
+    $a = $data->a;
+    $m = $data->m;
+    $s = $data->s;
+    $i = $data->i;
+}?>
+
 <script type="text/javascript">
 var absCanvas = document.getElementById("absen");
 
@@ -8,19 +15,17 @@ Chart.defaults.global.defaultFontSize = 16;
 
 var absen = {
     labels: [
+        "Tidak Hadir",
         "Hadir",
-        "Izin",
         "Sakit",
-        "Tugas",
-        "Tidak Hadir"
+        "Izin"
     ],
     datasets: [
         {
-            data: [20, 3, 2, 1, 4],
+            data: [<?php echo $a .",". $m .",". $s .",". $i ?>],
             backgroundColor: [
                 "#FF6384",
                 "#63FF84",
-                "#84FF63",
                 "#8463FF",
                 "#6384FF"
             ]

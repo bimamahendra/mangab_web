@@ -1,11 +1,11 @@
 <?php
 class Mmhs extends CI_Model {
-	public function __construct() {
-		parent::__construct();
-		$this->load->database();
-	}
+  public function __construct() {
+    parent::__construct();
+    $this->load->database();
+  }
 
-	public function getAllMhs(){
+  public function getAllMhs(){
     return $this->db->get('mahasiswa')->result();
   }
 
@@ -24,8 +24,8 @@ class Mmhs extends CI_Model {
   }
 
   public function reset($nrp){
-  	$this->db->query("UPDATE mahasiswa SET ID_DEVICE = NULL, STATUS_LOGIN = 0, STATUS_PASS = 0, LAST_LOGOUT = NULL WHERE NRP_MHS = ".$nrp." ");
-  	return $this->db->affected_rows();
+    $this->db->query("UPDATE mahasiswa SET PASS_MHS = 'stikimalang', ID_DEVICE = NULL, STATUS_LOGIN = 0, STATUS_PASS = 0, LAST_LOGOUT = NULL WHERE NRP_MHS = ".$nrp." ");
+    return $this->db->affected_rows();
   }
 
   public function delete($nrp){

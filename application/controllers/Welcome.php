@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
+	function __construct(){
+		parent::__construct();
+		$this->load->model('Mabsen');
+	}
+
 	/**
 	 * Index Page for this controller.
 	 *
@@ -23,6 +28,7 @@ class Welcome extends CI_Controller {
 		if ($this->session->userdata('isLogin')){
 			$param['main_content'] = 'stats';
 			$param['page_title'] = 'Dashboard';
+			$param['dataout'] = $this->Mabsen->stat();
 			$this->load->view('dashboard',$param);
 		} else {
 			$this->load->view('login');

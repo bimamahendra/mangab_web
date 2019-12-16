@@ -23,13 +23,13 @@
   </div>
   <?php } ?>
 </div>
-<div class="py-0">
+<!-- <div class="py-0">
   <div class="container">
     <div class="row">
-      <div class="col-md-12"><a class="btn btn-success" href="<?php echo base_url('Mahasiswa/add_mhs'); ?>"><i class="fa fa-plus"></i>&ensp;Tambah Mahasiswa</a></div>
+      <div class="col-md-12"><a class="btn btn-success" href="<?php echo base_url('Dosen/add_detail'); ?>"><i class="fa fa-plus"></i>&ensp;Tambah Dosen</a></div>
     </div>
   </div>
-</div>
+</div> -->
 <div class="py-4">
   <div class="container">
     <div class="row">
@@ -39,35 +39,35 @@
             <thead>
               <tr>
                 <th class="text-center">NRP</th>
-                <th class="text-center">Nama</th>
-                <!-- <th class="text-center">Email</th> -->
-                <th class="text-center">Device  </th>
-                <th class="text-center">Login</th>
-                <th class="text-center">Pass</th>
-                <th class="text-center">Logout</th>
-                <th class="text-center" style="width: 50px">Aksi</th>
+                <th class="text-center">Nama Mahasiswa</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Timestamp</th>
               </tr>
             </thead>
             <tbody>
               <?php $i = 1;
-              foreach ($mhs_list as $mhs){ ?>
+              foreach ($detail_list as $detail){ ?>
                 <tr>
-                  <td class="text-center"><?php echo $mhs->NRP_MHS; ?></td>
-                  <td class="text-left"><?php echo $mhs->NAMA_MHS ?></td>
-                  <!-- <td class="text-center"><?php echo $mhs->EMAIL_MHS; ?></td> -->
-                  <td class="text-center"><?php echo isset ($mhs->ID_DEVICE) ? $mhs->ID_DEVICE : "-" ?></td>
-                  <td class="text-center"><?php echo isset ($mhs->STATUS_LOGIN) ? $mhs->STATUS_LOGIN : "0" ?></td>
-                  <td class="text-center"><?php echo isset ($mhs->STATUS_PASS) ? $mhs->STATUS_PASS : "0" ?></td>
-                  <td class="text-center"><?php echo isset ($mhs->LAST_LOGOUT) ? $mhs->LAST_LOGOUT : "0" ?></td>
-                  <td class="text-center">
-                    <a href="<?= base_url('Mahasiswa/edit_mhs/' . $mhs->NRP_MHS) ?>"><i class="fa fa-pencil text-secondary"></i></a>
-                    <a href="#" data-toggle="modal" data-target="#ModalDelete" data-id="<?php echo $mhs->NRP_MHS; ?>"
-                        data-title="<?php echo $mhs->NRP_MHS; ?>"><i class="fa fa-trash text-danger"></i></a>
-                  </td>
+                  <td class="text-center"><?php echo $detail->NRP_MHS; ?></td>
+                  <td class="text-left"><?php echo $detail->NAMA_MHS; ?></td>
+                  <?php if($detail->STATUS_DETABSEN == 0){ ?>
+                    <td class="text-center"><a class="btn btn-sm btn-danger text-white">A</a></td>
+                  <?php } else if($detail->STATUS_DETABSEN == 1) {?>
+                    <td class="text-center"><a class="btn btn-sm btn-primary text-white">M</a></td>
+                  <?php } else if($detail->STATUS_DETABSEN == 2) {?>
+                    <td class="text-center"><a class="btn btn-sm btn-info text-white">S</a></td>
+                  <?php } else {?>
+                    <td class="text-center"><a class="btn btn-sm btn-success text-white">I</a></td>
+                  <?php } ?>
+                  <td class="text-center"><?php echo $detail->TS_DETABSEN; ?></td>
                 </tr>
               <?php $i++; } ?>
             </tbody>
           </table>
+        </div>
+        <label><b>Note : </b></label>
+        <div>
+          <textarea class="col-md-12" rows="5" disabled><?php foreach ($detail_note as $note) {echo $note->NOTE;} ?></textarea>
         </div>
       </div>
     </div>
@@ -80,11 +80,11 @@
         <h5 class="modal-title">Konfirmasi Penghapusan</h5> <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
       </div>
       <div class="modal-body">
-        <p>Anda yakin ingin menghapus data mahasiswa yang dipilih?</p>
-        <p id="mhstitle"></p>
+        <p>Anda yakin ingin menghapus data detail yang dipilih?</p>
+        <p id="detailtitle"></p>
       </div>
       <div class="modal-footer"> 
-        <a href="<?php echo base_url() ?>Mahasiswa/delete/<?php echo $mhs->NRP_MHS?>" class="btn btn-danger">Delete</a>
+        <a href="<?php echo base_url() ?>Absen/delete/<?php echo $detail->ID_ABSEN?>" class="btn btn-danger">Delete</a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
       </div>
     </div>
@@ -93,10 +93,10 @@
 <script>
 $('#ModalDelete').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
-    var mhs_id = button.data('id')
+    var detail_id = button.data('id')
     var modal = $(this)
-    var mhs_title = button.data('title');
-    document.getElementById('mhstitle').innerHTML = mhs_title;
-    modal.find('.modal-footer a').attr("href", "<?= base_url() ?>Mahasiswa/delete/" + mhs_id)
+    var detail_title = button.data('title');
+    document.getElementById('detailtitle').innerHTML = detail_title;
+    modal.find('.modal-footer a').attr("href", "<?= base_url() ?>Absen/delete/" + detail_id)
 })
 </script>

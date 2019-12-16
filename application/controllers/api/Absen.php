@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+date_default_timezone_set("Asia/Jakarta");
+
 class Absen extends CI_Controller {
 
     function __construct()
@@ -55,7 +57,7 @@ class Absen extends CI_Controller {
 
         if($data->STATUS_DETABSEN == 1){
             $response["error"] = true;
-            $response["message"] = "Attended";
+            $response["message"] = "Already Attended";
             
             $this->throw(200, $response);
             return;
@@ -109,7 +111,7 @@ class Absen extends CI_Controller {
         $this->throw(200, $response);
     }
 
-    public function historyAbsensi(){
+    public function historyAbsensiDosen(){
         $response = [];
 
         $noInduk = $this->input->post("no_induk");
@@ -126,7 +128,7 @@ class Absen extends CI_Controller {
             JOIN matkul b
             ON b.ID_MATKUL = a.ID_MATKUL
             WHERE b.NIP_DOSEN = '".$noInduk."'
-            AND a.STATUS_ABSEN = 1
+            AND a.STATUS_ABSEN = 1 OR a.STATUS_ABSEN = 2
             ")->result();
 
             if(count($data) > 0){    
@@ -145,6 +147,16 @@ class Absen extends CI_Controller {
             return;
         }
 
+        $response["error"] = true;
+        $response["message"] = "History is not found";
+        $this->throw(200, $response);
+    }
+    
+    public function historyAbsensiMhs(){
+        $response = [];
+
+        $noInduk = $this->input->post("no_induk");
+
         $isMhs = $this->db->where("NRP_MHS", $noInduk)->get("ambilmk")->row() != null;
 
         if($isMhs){
@@ -155,12 +167,15 @@ class Absen extends CI_Controller {
             b.RUANGAN_ABSEN as ruangan_matkul,
             b.TS_ABSEN as jadwal_kelas,
             a.STATUS_DETABSEN as status_absen,
-            a.TS_DETABSEN as jadwal_absen
+            a.TS_DETABSEN as jadwal_absen,
+            d.NAMA_DOSEN as nama_dosen
             FROM detail_absen a 
             JOIN absen b
             JOIN matkul c
+            JOIN dosen d
             ON a.ID_ABSEN = b.ID_ABSEN
             AND b.ID_MATKUL = c.ID_MATKUL
+            AND c.NIP_DOSEN = d.NIP_DOSEN
             WHERE a.NRP_MHS = '".$noInduk."'
             AND b.STATUS_ABSEN = 1
             ")->result();
