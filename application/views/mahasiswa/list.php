@@ -26,7 +26,7 @@
 <div class="py-0">
   <div class="container">
     <div class="row">
-      <div class="col-md-12"><a class="btn btn-primary" href="<?php echo base_url('Mahasiswa/add_mhs'); ?>"><i class="fa fa-plus"></i>&ensp;Tambah Mahasiswa</a></div>
+      <div class="col-md-12"><a class="btn btn-success" href="<?php echo base_url('Mahasiswa/add_mhs'); ?>"><i class="fa fa-plus"></i>&ensp;Tambah Mahasiswa</a></div>
     </div>
   </div>
 </div>
