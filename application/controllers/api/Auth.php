@@ -11,9 +11,11 @@ class Auth extends CI_Controller {
 
     public function checkStatusLogin(){
         $response = [];
+        
         $idDevice = $this->input->post("id_device");
         
         $data = $this->db->where("ID_DEVICE", $idDevice)->get("mahasiswa")->row();
+        
         if($data != null){
             if($data->STATUS_LOGIN == 1){ 
                 $response["error"] = false;
@@ -72,9 +74,19 @@ class Auth extends CI_Controller {
                 return;
             }
         }
-
+        
         $data = $this->db->where("NRP_MHS", $nrp)->where("PASS_MHS", $password)->get("mahasiswa")->row();
         if($data != null){
+            $checkDeviceId = $this->db->where("ID_DEVICE", $device_id)->get("mahasiswa")->row();
+            if($checkDeviceId != null){
+                if($checkDeviceId->NRP_MHS != $data->NRP_MHS){
+                    $response["error"] = true;
+                    $response["message"] = "Your device ID was bound with another account";
+                    $this->throw(200, $response);
+                    return;
+                }
+            }
+            
             if($data->STATUS_LOGIN == 1){
                 $response["error"] = true;
                 $response["message"] = "Account has logged in other device";

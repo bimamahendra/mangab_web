@@ -24,7 +24,7 @@ class Mdosen extends CI_Model {
   }
 
   public function reset($nip){
-    $this->db->query("UPDATE dosen SET PASS_DOSEN = 'stikimalang', STATUS_PASS = 0 WHERE NIP_DOSEN = ".$nip." ");
+    $this->db->query("UPDATE dosen SET PASS_DOSEN = 'stikimalang', STATUS_PASS = 0, STATUS_LOGIN = 0 WHERE NIP_DOSEN = ".$nip." ");
     return $this->db->affected_rows();
   }
 

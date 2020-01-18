@@ -128,7 +128,8 @@ class Absen extends CI_Controller {
             JOIN matkul b
             ON b.ID_MATKUL = a.ID_MATKUL
             WHERE b.NIP_DOSEN = '".$noInduk."'
-            AND a.STATUS_ABSEN = 1 OR a.STATUS_ABSEN = 2
+            AND a.STATUS_ABSEN = 1 OR a.STATUS_ABSEN = 2 
+            ORDER BY(a.ID_ABSEN) DESC
             ")->result();
 
             if(count($data) > 0){    
@@ -177,7 +178,8 @@ class Absen extends CI_Controller {
             AND b.ID_MATKUL = c.ID_MATKUL
             AND c.NIP_DOSEN = d.NIP_DOSEN
             WHERE a.NRP_MHS = '".$noInduk."'
-            AND b.STATUS_ABSEN = 1
+            AND b.STATUS_ABSEN = 2 
+            ORDER BY(a.ID_ABSEN) DESC
             ")->result();
 
             if(count($data) > 0){    
